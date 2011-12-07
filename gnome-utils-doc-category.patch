@@ -1,0 +1,24 @@
+diff -up gnome-utils-2.28.1/baobab/help/baobab.omf.in.doc-category gnome-utils-2.28.1/baobab/help/baobab.omf.in
+--- gnome-utils-2.28.1/baobab/help/baobab.omf.in.doc-category	2010-05-03 19:22:01.577183150 -0400
++++ gnome-utils-2.28.1/baobab/help/baobab.omf.in	2010-05-03 19:22:09.928932275 -0400
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" standalone="no"?>
+ <omf>
+   <resource>
+-    <subject category="GNOME|Applications|System Tools"/>
++    <subject category="GNOME|System"/>
+     <type>user's guide</type>
+     <relation seriesid="196f8340-d2c8-11da-9519-df1aa4a99e74"/>
+     <rights type="GNU FDL" license.version="1.0" holder="Sun Microsystems"/>
+diff -up gnome-utils-2.28.1/logview/help/gnome-system-log.omf.in.doc-category gnome-utils-2.28.1/logview/help/gnome-system-log.omf.in
+--- gnome-utils-2.28.1/logview/help/gnome-system-log.omf.in.doc-category	2010-05-03 19:22:31.181932697 -0400
++++ gnome-utils-2.28.1/logview/help/gnome-system-log.omf.in	2010-05-03 19:22:40.061934233 -0400
+@@ -1,7 +1,7 @@
+ <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+ <omf>
+   <resource>
+-    <subject category="GNOME|Applications|System Tools"/>
++    <subject category="GNOME|System"/>
+     <type>user's guide</type>
+     <relation seriesid="89dec73e-963c-11d6-9597-e9072c5fff6d"/>
+     <rights type="GNU FDL" license.version="1.1" holder="Sun Microsystems"/>

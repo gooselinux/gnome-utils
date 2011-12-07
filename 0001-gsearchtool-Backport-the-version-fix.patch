@@ -1,0 +1,112 @@
+From d300c1a0d6c53f46b96363068713c1a14aaa77ab Mon Sep 17 00:00:00 2001
+From: Dennis Cranston <dennis_cranston@yahoo.com>
+Date: Wed, 21 Oct 2009 14:43:43 -0700
+Subject: [PATCH 1/3] [gsearchtool]  Backport the "--version" fix
+
+Backport the "--version" command line fix without introducting
+a new string.  Also, fix a compiler warning.
+---
+ gsearchtool/ChangeLog               |    7 +++++++
+ gsearchtool/gsearchtool-callbacks.c |   11 +++++++++++
+ gsearchtool/gsearchtool-callbacks.h |    5 +++++
+ gsearchtool/gsearchtool-support.c   |    2 +-
+ gsearchtool/gsearchtool.c           |    3 ++-
+ 5 files changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/gsearchtool/ChangeLog b/gsearchtool/ChangeLog
+index ff2f4af..7397146 100644
+--- a/gsearchtool/ChangeLog
++++ b/gsearchtool/ChangeLog
+@@ -1,3 +1,10 @@
++2009-10-21 Dennis Cranston <dennis_cranston@yahoo.com>
++
++	* gsearchtool.c, gsearchtool-callbacks.[ch]: Backport the
++	  "--version" command line argument fix without introducing
++	  a new string.  
++	* gsearchtool-support.c: Fix compiler warning.
++ 
+ 2009-09-30  Dennis Cranston  <dennis_cranston@yahoo.com>
+ 
+ 	*  gsearchtool.c:  Remove new string from previous commit.
+diff --git a/gsearchtool/gsearchtool-callbacks.c b/gsearchtool/gsearchtool-callbacks.c
+index 1496b8d..62cb86a 100644
+--- a/gsearchtool/gsearchtool-callbacks.c
++++ b/gsearchtool/gsearchtool-callbacks.c
+@@ -31,6 +31,7 @@
+ 
+ #include <string.h>
+ #include <signal.h>
++#include <stdlib.h>
+ #include <sys/wait.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+@@ -94,6 +95,16 @@ quit_application (GSearchWindow * gsearch)
+ }
+ 
+ void
++version_cb (const gchar * option_name,
++            const gchar * value,
++            gpointer data,
++            GError ** error)
++{
++        g_print ("%s %s\n", g_get_application_name (), VERSION);
++        exit (0);
++}
++
++void
+ quit_session_cb (EggSMClient * client,
+                  gpointer data)
+ {
+diff --git a/gsearchtool/gsearchtool-callbacks.h b/gsearchtool/gsearchtool-callbacks.h
+index 604eed6..191cc94 100644
+--- a/gsearchtool/gsearchtool-callbacks.h
++++ b/gsearchtool/gsearchtool-callbacks.h
+@@ -36,6 +36,11 @@ extern "C" {
+ #include "eggsmclient.h"
+ 
+ void
++version_cb (const gchar * option_name,
++            const gchar * value,
++            gpointer data,
++            GError ** error);
++void
+ quit_session_cb (EggSMClient * client,
+                  gpointer data);
+ void
+diff --git a/gsearchtool/gsearchtool-support.c b/gsearchtool/gsearchtool-support.c
+index 0e1bc46..3852178 100644
+--- a/gsearchtool/gsearchtool-support.c
++++ b/gsearchtool/gsearchtool-support.c
+@@ -1195,7 +1195,7 @@ open_file_with_filemanager (GtkWidget * window,
+ {
+ 	GDesktopAppInfo * d_app_info;
+ 	GKeyFile * key_file;
+-	GdkAppLaunchContext *ctx;
++	GdkAppLaunchContext * ctx = NULL;
+ 	GList * list = NULL;
+ 	GAppInfo * g_app_info;
+ 	GFile * g_file;
+diff --git a/gsearchtool/gsearchtool.c b/gsearchtool/gsearchtool.c
+index 37c5a88..0afc8b0 100644
+--- a/gsearchtool/gsearchtool.c
++++ b/gsearchtool/gsearchtool.c
+@@ -154,6 +154,7 @@ struct _GSearchGOptionArguments {
+ } GSearchGOptionArguments;
+ 
+ static GOptionEntry GSearchGOptionEntries[] = {
++	{ "version", 0, G_OPTION_FLAG_NO_ARG, G_OPTION_ARG_CALLBACK, version_cb, NULL, NULL},
+ 	{ "named", 0, 0, G_OPTION_ARG_STRING, &GSearchGOptionArguments.name, NULL, N_("STRING") },
+ 	{ "path", 0, 0, G_OPTION_ARG_STRING, &GSearchGOptionArguments.path, NULL, N_("PATH") },
+ 	{ "sortby", 0, 0, G_OPTION_ARG_STRING, &GSearchGOptionArguments.sortby, NULL, N_("VALUE") },
+@@ -1281,7 +1282,7 @@ add_atk_relation (GtkWidget * obj1,
+ static void
+ gsearch_setup_goption_descriptions (void)
+ {
+-	gint i = 0;
++	gint i = 1;
+ 	gint j;
+ 
+ 	GSearchGOptionEntries[i++].description = g_strdup (_("Set the text of \"Name contains\" search option"));
+-- 
+1.6.5.1
+
